@@ -27,7 +27,7 @@ router.get('/logout' , logoutUser)
 
 
 /** 
- * @route /api/auth/getMe
+ * @route /api/auth/profile
  * @function To Get the Profile of A User 
  */
 router.get('/profile' , isLoggedIn,  getProfile)
