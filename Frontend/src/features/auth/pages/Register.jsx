@@ -97,7 +97,7 @@ const Register = () => {
     <>
       <div
         ref={rootRef}
-        className="w-full h-screen flex justify-center items-center"
+        className="w-full text-black h-screen flex justify-center items-center"
       >
         <div
           ref={cardRef}

@@ -11,9 +11,10 @@ export const AuthProvider = ({ children }) => {
             try {
                 const data = await getProfile();
                 setUser(data.user);
-                setLoading(false);
             } catch (error) {
                 console.log(error.message);
+            } finally {
+                setLoading(false);
             }
         }
 

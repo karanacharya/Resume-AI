@@ -1,9 +1,11 @@
-import { use, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
 import { useGSAP } from "@gsap/react";
 import { useAuth } from "../hooks/useAuth";
+
+gsap.registerPlugin(useGSAP);
 
 const Login = () => {
   //GSAP FUNTIONS
@@ -11,8 +13,13 @@ const Login = () => {
   const cardRef = useRef(null);
   const loadingRef = useRef(null);
   const buttonRef = useRef(null);
+  const { loading, handleLogin } = useAuth();
+
+
   useGSAP(
     () => {
+      if (!cardRef.current || !buttonRef.current) return;
+
       gsap.from(cardRef.current, {
         opacity: 0,
         y: 14,
@@ -28,18 +35,20 @@ const Login = () => {
         ease: "power2.out",
       });
     },
-    { scope: rootRef },
+    { scope: rootRef, dependencies: [loading] }
   );
   useGSAP(
-    ()=>{
-      gsap.to(loadingRef.current,{
-        opacity : 0.3,
+    () => {
+      if (!loadingRef.current) return;
+
+      gsap.to(loadingRef.current, {
+        opacity: 0.3,
         repeat: -1,
         yoyo: true,
-        delay:0.5,
-        duration:1
-      })
-    }
+        duration: 1,
+      });
+    },
+    { dependencies: [loading] }
   );
   const onButtonClick = () => {
     gsap.killTweensOf(buttonRef.current);
@@ -59,11 +68,10 @@ const Login = () => {
         ease: "power2.out",
       });
   };
- 
 
 
 
-  const { loading, handleLogin } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -80,7 +88,7 @@ const Login = () => {
 
   if (loading) {
     return (
-      <main className="bg-gray-800 h-[100vh] w-[100vw] flex justify-center items-center text-white">
+      <main className="bg-gray-900 h-[100vh] w-[100vw] flex justify-center items-center text-white">
         <h1 ref={loadingRef} className="text-3xl flex font-bold">Loading.....</h1>
       </main>
     );
@@ -90,7 +98,7 @@ const Login = () => {
     <>
       <div
         ref={rootRef}
-        className="w-full font-sans h-screen flex justify-center items-center"
+        className="w-full text-black font-sans h-screen flex justify-center items-center"
       >
         <div
           ref={cardRef}
@@ -132,7 +140,7 @@ const Login = () => {
               ref={buttonRef}
               onClick={onButtonClick}
               type="submit"
-              className="w-full bg-blue-300 text-black font-bold font-mono p-2 rounded-xl"
+              className="w-full  hover:bg-slate-900 hover:text-white bg-blue-300 text-black font-bold font-mono p-2 rounded-xl"
             >
               Login
             </button>
@@ -141,7 +149,7 @@ const Login = () => {
           <p className="text-center font-thin font-serif text-grey-600 mt-2">
             Dont have an account?{" "}
             <Link
-              className="font-semibold underline font-serif"
+              className="font-semibold underline font-serif hover:text-red-600"
               to={"/register"}
             >
               Register
