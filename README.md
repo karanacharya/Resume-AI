@@ -12,7 +12,7 @@ This project is designed to let users register, log in, and create AI-generated 
 - ✅ Interview report generation using AI services
 - ✅ Clear separation between frontend (React + Vite) and backend (Node + Express)
 
-## Getting Started
+## Let's start
 ### 1) Backend
 1. Go to the backend folder:
    ```bash
@@ -50,5 +50,3 @@ This project is designed to let users register, log in, and create AI-generated 
 - Add any required environment variables (e.g., database connection, JWT secret, AI API key) in the backend configuration
 
 ---
-
-If you want to improve the project, consider adding better error handling, user profiles, and more advanced AI report customization.
