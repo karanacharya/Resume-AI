@@ -35,6 +35,7 @@ export async function login({ email, password }) {
       const response = await api.post("/api/auth/login", {
          email, password
       });
+      
       if (!response) {
          console.log("Login failed");
          return;

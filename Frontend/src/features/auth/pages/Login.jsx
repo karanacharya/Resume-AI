@@ -50,6 +50,7 @@ const Login = () => {
     },
     { dependencies: [loading] }
   );
+  
   const onButtonClick = () => {
     gsap.killTweensOf(buttonRef.current);
 

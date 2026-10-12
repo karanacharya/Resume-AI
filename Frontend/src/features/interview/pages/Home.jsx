@@ -1,16 +1,19 @@
 import React, { useRef, useState } from 'react'
 import { useInterview } from '../hooks/useInterview';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
+import { useAuth } from '../../auth/hooks/useAuth';
 
 
 
 
 const Home = () => {
     const navigate = useNavigate();
+    const { user, handleLogout } = useAuth();
     const resumeRef = useRef();
     const [jobDescription, setJobDescription] = useState('');
     const [selfDescription, setSelfDescription] = useState('');
     const [fileName, setFileName] = useState("");
+    const [showProfile, setShowProfile] = useState(false);
 
     const { generateReport, loading, reports } = useInterview();
 
@@ -37,6 +40,16 @@ const Home = () => {
         }
     }
 
+    const handleProfileLogout = async () => {
+        try {
+            await handleLogout();
+            navigate('/login');
+            alert('Logout successful')
+        } catch (error) {
+            console.error("Error logging out:", error);
+        }
+    };
+
     if (loading) {
         return (
             <div className="bg-gray-950 text-white min-h-screen flex flex-col items-center justify-center px-4 py-2">
@@ -47,7 +60,39 @@ const Home = () => {
     }
 
     return (
-        <div className="bg-gray-950 border border-x-blue-500 border-y-green-500 rounded-xl text-white min-h-screen flex items-center justify-center px-4 py-2">
+        <div className="relative bg-gray-950 border border-x-blue-500 border-y-green-500 rounded-xl text-white min-h-screen flex items-center justify-center px-4 py-2">
+
+            {/* Profile Section */}
+            <div className="absolute right-6 top-6 z-10 flex w-48 flex-col items-center">
+                <div
+                    
+                    onClick={() => setShowProfile(!showProfile)}
+                    className="mb-1 flex h-14 w-14 items-center cursor-pointer justify-center rounded-full border-4 border-blue-400 bg-gray-800 text-2xl text-blue-300">
+                    <span aria-hidden="true">👤</span>
+                </div>
+
+                {/* Toggle Profile Details */}
+                {showProfile && (
+                    <div className="w-full rounded-2xl border border-gray-700 bg-gray-800 px-4 py-3 text-center shadow-lg">
+                        <p className="font-semibold text-blue-300">Profile</p>
+                        <p className="mt-1 mb-1 truncate text-sm text-gray-200" title={user?.username}>
+                            {user?.username || 'User'}
+                        </p>
+                        <p className="truncate text-xs text-gray-400" title={user?.email}>
+                            {user?.email || ''}
+                        </p>
+                        <button
+                            type="button"
+                            onClick={handleProfileLogout}
+                            className="mt-1 block w-full text-sm text-blue-300 transition hover:text-blue-200"
+                        >
+                            Logout
+                        </button>
+                    </div>
+
+                )}
+
+            </div>
 
             <div className="flex w-full max-w-9xl gap-10">
 
@@ -85,7 +130,7 @@ const Home = () => {
                 </div>
 
                 {/* Main Section */}
-                <div className="flex-1 flex flex-col items-center">
+                <div className="flex-1  flex flex-col items-center">
 
                     {/* Header */}
                     <div className="text-center mb-10">
@@ -96,6 +141,8 @@ const Home = () => {
                             Upload your details and let AI prep you for the interview
                         </p>
                     </div>
+
+
 
                     {/* Card */}
                     <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 w-full max-w-xl shadow-xl flex flex-col gap-6">

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useInterview } from "../hooks/useInterview";
-import { useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 
 
 
@@ -151,6 +151,8 @@ function RoadmapSection({ plan }) {
 export default function InterviewReport() {
     const { report, fetchReport, buttonloading, fetchUserReports, loading, setLoading, generateResumePdf } = useInterview();
     const data = report;
+     const navigate = useNavigate();
+
     const [activeSection, setActiveSection] = useState("technical");
     const { interviewId } = useParams();
 
@@ -182,7 +184,7 @@ export default function InterviewReport() {
             {/* Left Sidebar */}
             <aside className="w-56 bg-gray-900 border-r border-gray-800 flex flex-col p-5 flex-shrink-0">
                 <div className="h-auto w-auto">
-                    <h1 className="text-xl font-bold mb-8">
+                    <h1 onClick={()=> navigate('/')} className="text-xl cursor-pointer font-bold mb-8">
                         Interv<span className="text-yellow-400">AI</span>
                     </h1>
                     <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Sections</p>
