@@ -6,10 +6,11 @@ const userRoutes = require('./routes/user.routes');
 const interviewRouter = require('./routes/interview.routes');
 
 const app = express();
+const Frontend_URI = process.env.FRONTEND_URI
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: Frontend_URI,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
