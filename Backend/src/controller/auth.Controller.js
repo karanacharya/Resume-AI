@@ -47,7 +47,12 @@ module.exports.registerUser = async function (req, res) {
       { expiresIn: "1d" },
     );
 
-    res.cookie("token", token);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none"
+    });
 
     res.status(201).json({
       message: "User created successfully",
@@ -75,7 +80,7 @@ module.exports.registerUser = async function (req, res) {
 module.exports.loginUser = async function (req, res) {
   try {
     let { email, password } = req.body;
-    
+
 
     const user = await userModel.findOne({ email });
 
@@ -88,11 +93,11 @@ module.exports.loginUser = async function (req, res) {
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if(!isPasswordValid){
-        return res.status(400).json({
-            message : "Invalid Credentials",
-            status :"failed"
-        })
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        message: "Invalid Credentials",
+        status: "failed"
+      })
     }
 
     const token = jwt.sign(
@@ -101,7 +106,11 @@ module.exports.loginUser = async function (req, res) {
       { expiresIn: "1d" },
     );
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none"
+    });
 
     res.status(200).json({
       message: "User Logged In successfully",
@@ -126,27 +135,27 @@ module.exports.loginUser = async function (req, res) {
  * @route /api/auth/logout
  *@description To Logout a User
  */
-module.exports.logoutUser = async function(req, res){
+module.exports.logoutUser = async function (req, res) {
 
-     const token = req.cookies.token || req.headers.authorization?.split(" ")[ 1 ]
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1]
 
-     if(!token){
-        return res.status(400).json({
-            message : "Token Not Found",
-            status : "failed"
-        })
-     }
+  if (!token) {
+    return res.status(400).json({
+      message: "Token Not Found",
+      status: "failed"
+    })
+  }
 
-     await blackListTokenModel.create({
-        token
-     })
+  await blackListTokenModel.create({
+    token
+  })
 
-     res.clearCookie("token")
+  res.clearCookie("token")
 
-     res.status(200).json({
-        message : "User logged Out successfully",
-        status : "Success"
-     })
+  res.status(200).json({
+    message: "User logged Out successfully",
+    status: "Success"
+  })
 }
 
 
@@ -154,20 +163,20 @@ module.exports.logoutUser = async function(req, res){
  * @route /api/auth/profile
  *@description To Get the Profile of a User
  */
-module.exports.getProfile = async function(req, res){
+module.exports.getProfile = async function (req, res) {
 
-     const user = req.user;
+  const user = req.user;
 
-     if(!user){
-        return res.status(400).json({
-            message :" User Not Found ",
-            status : "Failed"
-        })
-     }
+  if (!user) {
+    return res.status(400).json({
+      message: " User Not Found ",
+      status: "Failed"
+    })
+  }
 
-     return res.status(200).json({
-        message : "User Details Found",
-        status :"success",
-        user
-     })
+  return res.status(200).json({
+    message: "User Details Found",
+    status: "success",
+    user
+  })
 }
